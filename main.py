@@ -61,11 +61,11 @@ async def send_test_request():
         # Generate random string for request id
 
         header = {'Content-Type': 'application/json',
-                  "apikey": api_test_key, "SrcApp": src_app, 'Accept': 'application/json'}
+                  'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
 
         request_data = {
             "requestId": "",
-            "service": 'LOP',
+            "service": "LOP",
             "encryptedKey": "A2MzWQ6zv+RArgSpGmW5Lg1K3phW21+7ex8uKSHZKtkuF4MOxAF1MlciwmgCGohSS6LGseOAaOrCZw7DkpgQ4qAc7j0WKb6GAJQwIPrJPIR/NFeisXi4Mp1mYZbN9VfwpBWTAEcgEjrF8SICZkeb2J+sR/wvZNeEPJGRTHpn0FewcIhz5m6GPKU7J+8XWLBMJN2Hy0tkdQg8iwj3KsCdLJ+IexSxDNXorxDkt2W0SMuW0aMuGEMoj8QmMXcfks751BvIy5h3gCLE9EcKlhp9QGOnjG35ZFOIv4ioJP+5E8qhT4a9XkUju0lVpUAkuI5TeLm14Wk/2+zX1TFm1jHzK+cTDP/C11HQ6OZ+1no3fGwAxsS/IGNpQO4dpoiXcUWgOugHkeRR8X4w0aEhX/v6dvvXGr0WmD0gu2iIsZbfR1CMk9RCykD7oEstN04Lxyka+AXAM6bh3EJ5Jm5n9CvDM5Lph+KqstBjiT17MUq81F/KcsMtTC42s4JWS+5SCe/y6YustUwxGXL9VxVjzHehuC3xeEQG9SLxmLCJsteWsj9eo8XwMImktJH7S20RAhObMcaGvVuTrV3/unYdI218BklvvN61TvUssLd5WjLLbLMU8gtr5fSGJi5nV9RhqnGZ/F9RqNQ4MJgWjzUZ6XiJAqKrAKIVIwc8i6/o5ThM5Os=",
             "oaepHashingAlgorithm": "NONE",
             "iv": "",
