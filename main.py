@@ -78,7 +78,8 @@ async def send_test_request():
 
         async with session.post(endpoint_url, headers=header, data=request_data) as response:
             #  decrypting response
-            print(response.status)
+            print(session.headers)
+            print(session)
 
     return {"Hello": "World"}
 
