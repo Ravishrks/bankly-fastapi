@@ -64,7 +64,7 @@ async def send_test_request():
             "service": 'LOP',
             "encryptedKey": enc_session_key,
             "oaepHashingAlgorithm": 'NONE',
-            "iv": iv,
+            "iv": "",
             "encryptedData": encrypted_data,
             "clientInfo": "",
             "optionalParam": ""
