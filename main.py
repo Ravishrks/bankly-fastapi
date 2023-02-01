@@ -64,10 +64,10 @@ async def send_test_request():
     request_data = {
         "requestId": "",
         "service": "LOP",
-        "encryptedKey": b64encode(encrypted_session_key_in_bytes),
+        "encryptedKey": "cGzpKmuRtRDO1TxeML5eg65GBwYZoPxMM8tOUB4mUR/eBmc+BF504bD6Cgsegw3z1w45iAwQGNa43lNgIge7lfTX6HdAB0TVrKi+cvn6Z+dQGDDm7jsBZvvyi2tLqPFt6rr5VRypquVCLedQp4/OrA+UYXjPEW/9L2Vi3jQpzY1ACIU3H/hOJn2W9qmg/Nxj0Pf+RenGu4mOilzUT3vaO6lalLw73lgSBShuL9eDb5o4YKpgMWloeRpl/2Pagbap4Mdp9+15rgYOyUu8b/fukagFBAq1PbsZ4xy8jKxjX75bjAzS02SGW47DU9jfGlmIj7p3LEWVw3oMauNM7BbH1qh/BxIobGAIUtt5mjhgv57GbIxkuBOuOMv+yFTtD+CazBftsUMaGbKVAy6acvbAACgDzcsT85ORiPi17oInqzdSD8GQ8LODO7Ti2I8y3dyKr0rjx6avVnfgD5l69T8kQ+rS0KHE85Abz+gfxyNnPRJ0UuCTzcdurUXN3wzPpSGZdDBYr9fy7yWpRTQiO+y5l9/ftNSp5uyqcucJ584qxLkFWlIuvwjHMAqCX3i3Ze+QVHU2jAj8IQfJx9NIWj2JJcrTQDJKlN+ckzKLjMseevgivb91IjxYGKy140UdgsDMATsKmtbCtIPT1K+TFEAYnFRm++99jcDCIzBrmdtA4zY=",
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
-        "encryptedData": encrypted_data,
+        "encryptedData": "MjBjODRiNDY1YWEzMjQyNzP1+zNEIrvGA39zglaaop2obzZVOxpTET9PXXSUblMWY4Vlqzb4y82xPz7DROuwTU6UhFl0T/rKbgMFZ606Wl+cZRIIFeiAipsRcgeSgaV99lPcoqQSUsJ2ZiLnn5qzupusWTl/Jrze9hGb7NADbWFCCC9ixmYSU6eqEwtzaNpaYYJp9vXafp0/EanWSeti00HwPXCOMhPRN5qHleysHVALuSI2IQxQptt5ULbWdp7nvAJng45OUvM8MhFxhNyNXHZ057IrCtijg/0+0Tl+vFBcMhwai+lvwcOHrguPwPUernrWIKfoWgm2N6/O2X3xZnQxe9IuWQBFDssyrEhD7txg0ubSb1aLNYNGZqWdiBi7en4k2nFcP9grtjpvvoD+rXtESCrZzkSO+GGmsAHt7NaJFru83ekhc7ioIswFfkD1",
         "clientInfo": "",
         "optionalParam": ""
     }
@@ -78,6 +78,7 @@ async def send_test_request():
     r = await client.post(endpoint_url, data=request_data, headers=headers)
 
     print(r.status_code)
+    print(r.json)
 
     return {"Hello": "World"}
 
