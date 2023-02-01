@@ -66,10 +66,10 @@ async def send_test_request():
         request_data = {
             "requestId": "",
             "service": 'LOP',
-            "encryptedKey": enc_session_key,
+            "encryptedKey": "pjN8k0GAgd4erhwPz8kCLE9UDolJCsgj59g2F2VkUXerHeIMr8b+LNCM2ZEbLvF4hYYDjOG4ojtkecXUWMowP/Cwx9hZagcew7ODdxaqIGX5IeJap2h5zA+vs/FQGJ79rcRkjNN+xb1yekHA0fZnxpVRWalXxfDdRLmH1ggeExqZmIdWmnNaV2ECLUd44/e+f5Cl5CihJvTESO60lFvn2Qk+EpEsGoAbM8a3R/T9xzRQJvpz/qYLdVDYrtPEK/nqIkl2vAf7x/EXTCCvKElpql6g4ANiDuwmPi1VQTqE3h/qE5ysgopAnXJmu98KAmXL+tBpepz5oiYdZ0uNVFBbmw==",
             "oaepHashingAlgorithm": "NONE",
             "iv": "",
-            "encryptedData": encrypted_data,
+            "encryptedData": "VrhgfZDwZ1AKqIVvKuWqVsmE+iOZhNcLcy6gabOnuBYiJDjXYBIscGslSFLUCjtTCwYdwM6Ru8qs3RCFCVfve+4RPCR835lQAUWb9KyZ233HAm0zWPmwXrvyBGOlT1AKoP9u0iChk86PQCOZY5C///0jrJqTDNYMbhGs4gSd9H6jMDE7YPFlW3nsRiWDu+YkXCFebyg4yzlt0lt/j+WWL27J0aS236yVPYkY2UJBmUO/9rKT0fF2jnpFeAogU2mW92UNNqql2/8gBYWZ438BfMJTSpAQFv7IKOKO+RIJosk=",
             "clientInfo": "",
             "optionalParam": ""
         }
@@ -125,7 +125,7 @@ def decrypt_using_private_key(value: str):
 
     # Importing private key
     rsa_key = RSA.importKey(open('secrets/bankly-private.pem').read())
-    cipher = PKCS1_OAEP.new(rsa_key)
+    cipher = PKCS1_v1_5.new(rsa_key)
     sentinel = get_random_bytes(16)
 
     return cipher.decrypt(b64decode(value), sentinel)
