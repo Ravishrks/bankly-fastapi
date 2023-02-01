@@ -42,7 +42,8 @@ async def send_test_request():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
   
-    session_key_in_bytes = get_random_bytes(16)
+    session_key_in_bytes = b64encode('3MA5SLJXGYDVZ02R')
+    # session_key_in_bytes = get_random_bytes(16)
     encrypted_session_key_in_bytes = encrypt_using_public_key(
         session_key_in_bytes)
 
@@ -66,10 +67,10 @@ async def send_test_request():
         request_data = {
             "requestId": "",
             "service": 'LOP',
-            "encryptedKey": "pjN8k0GAgd4erhwPz8kCLE9UDolJCsgj59g2F2VkUXerHeIMr8b+LNCM2ZEbLvF4hYYDjOG4ojtkecXUWMowP/Cwx9hZagcew7ODdxaqIGX5IeJap2h5zA+vs/FQGJ79rcRkjNN+xb1yekHA0fZnxpVRWalXxfDdRLmH1ggeExqZmIdWmnNaV2ECLUd44/e+f5Cl5CihJvTESO60lFvn2Qk+EpEsGoAbM8a3R/T9xzRQJvpz/qYLdVDYrtPEK/nqIkl2vAf7x/EXTCCvKElpql6g4ANiDuwmPi1VQTqE3h/qE5ysgopAnXJmu98KAmXL+tBpepz5oiYdZ0uNVFBbmw==",
+            "encryptedKey": "A2MzWQ6zv+RArgSpGmW5Lg1K3phW21+7ex8uKSHZKtkuF4MOxAF1MlciwmgCGohSS6LGseOAaOrCZw7DkpgQ4qAc7j0WKb6GAJQwIPrJPIR/NFeisXi4Mp1mYZbN9VfwpBWTAEcgEjrF8SICZkeb2J+sR/wvZNeEPJGRTHpn0FewcIhz5m6GPKU7J+8XWLBMJN2Hy0tkdQg8iwj3KsCdLJ+IexSxDNXorxDkt2W0SMuW0aMuGEMoj8QmMXcfks751BvIy5h3gCLE9EcKlhp9QGOnjG35ZFOIv4ioJP+5E8qhT4a9XkUju0lVpUAkuI5TeLm14Wk/2+zX1TFm1jHzK+cTDP/C11HQ6OZ+1no3fGwAxsS/IGNpQO4dpoiXcUWgOugHkeRR8X4w0aEhX/v6dvvXGr0WmD0gu2iIsZbfR1CMk9RCykD7oEstN04Lxyka+AXAM6bh3EJ5Jm5n9CvDM5Lph+KqstBjiT17MUq81F/KcsMtTC42s4JWS+5SCe/y6YustUwxGXL9VxVjzHehuC3xeEQG9SLxmLCJsteWsj9eo8XwMImktJH7S20RAhObMcaGvVuTrV3/unYdI218BklvvN61TvUssLd5WjLLbLMU8gtr5fSGJi5nV9RhqnGZ/F9RqNQ4MJgWjzUZ6XiJAqKrAKIVIwc8i6/o5ThM5Os=",
             "oaepHashingAlgorithm": "NONE",
             "iv": "",
-            "encryptedData": "VrhgfZDwZ1AKqIVvKuWqVsmE+iOZhNcLcy6gabOnuBYiJDjXYBIscGslSFLUCjtTCwYdwM6Ru8qs3RCFCVfve+4RPCR835lQAUWb9KyZ233HAm0zWPmwXrvyBGOlT1AKoP9u0iChk86PQCOZY5C///0jrJqTDNYMbhGs4gSd9H6jMDE7YPFlW3nsRiWDu+YkXCFebyg4yzlt0lt/j+WWL27J0aS236yVPYkY2UJBmUO/9rKT0fF2jnpFeAogU2mW92UNNqql2/8gBYWZ438BfMJTSpAQFv7IKOKO+RIJosk=",
+            "encryptedData": "tfNgDxH/AiIMtvOqUWqR/jDSX/JTLujlATqhY55JvsoDpbCYtqP40XDWcbDG0qUj6UV8+FA4kVtAu7Hl3cKEp4TDfYG4S/QXDGUOnygGlBJEY+MDO+IPoDC8blTDzVPGn3WCMG1SGrC54eZatgoAmhNUNm/zwy0UPCShxd6+0hHH3JKjhkhjGTCmxXnGjS7XCvTHYp3k+PKLB7MI/SKpjoVWW0athHP9cRSb9YhJB0sMlkW1Btq3wGBvNuZgcL4UKw3RIJz3Y0v8FBEAVOzFvFz4161UZOQK9dQAsf2u7gcChYg8xLqL4fuBFf7VZCRjaHFYzdl6ebS1aDd0aGSZ7b7/Rmga50Mv99nnGBH3SXRhnOWaK+SRBCa0ge1c1QNokxvUj6JXmD7D+4EsOnmW+UYRMFSw/AQqULg6ZdKU0os=",
             "clientInfo": "",
             "optionalParam": ""
         }
