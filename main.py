@@ -4,9 +4,11 @@ import aiohttp
 from fastapi import FastAPI
 from base64 import b64decode, b64encode
 from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5, AES
+from Crypto.Cipher import PKCS1_v1_5, AES, PKCS1_OAEP
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
+
+
 
 
 app = FastAPI()
@@ -39,9 +41,8 @@ def read_root():
 async def send_test_request():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    random_string = b'fgetdh3564hegde5'
-    session_key_in_bytes = random_string
-    # session_key_in_bytes = get_random_bytes(16)
+  
+    session_key_in_bytes = get_random_bytes(16)
     encrypted_session_key_in_bytes = encrypt_using_public_key(
         session_key_in_bytes)
 
@@ -124,7 +125,7 @@ def decrypt_using_private_key(value: str):
 
     # Importing private key
     rsa_key = RSA.importKey(open('secrets/bankly-private.pem').read())
-    cipher = PKCS1_v1_5.new(rsa_key)
+    cipher = PKCS1_OAEP.new(rsa_key)
     sentinel = get_random_bytes(16)
 
     return cipher.decrypt(b64decode(value), sentinel)
@@ -132,6 +133,7 @@ def decrypt_using_private_key(value: str):
 
 def encrypt_using_public_key(bytes):
     rsa_key = RSA.importKey(open('secrets/icici.cer').read())
+    
     cipher = PKCS1_v1_5.new(rsa_key)
     enc_key = cipher.encrypt(bytes)
     return enc_key
