@@ -29,8 +29,8 @@ src_app = 'bankly'
 ref_no = '20190704000084'
 mer_id = 'FLP0000001'
 mer_pass = 'admin12345'
-product = 'VP01'
-pro_cat = 36
+product = 'VV01'
+pro_cat = "1"
 linkMobile = '9944838952'
 tran_remark = 'FLIPKART Card Mobile Number link'
 endpoint_url = 'https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile'
@@ -49,14 +49,14 @@ async def send_test_request():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
 
-    random_32_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
-    encrypted_session_key_in_bytes = encrypt_using_public_key(
-        random_32_string.encode())
+    random_16_string = ''.join(random.choice(
+        string.ascii_uppercase + string.digits) for _ in range(16))
+    encrypted_session_key_in_bytes = encrypt_using_public_key(random_16_string)
 
     payload_data_to_be_encrypted = f'<xml><ReferenceNumber>{ref_no}</ReferenceNumber><MerchantId>{mer_id}</MerchantId><MerchantPassword>{mer_pass}</MerchantPassword><Product>{product}</Product><ProductCategory>{pro_cat}</ProductCategory><MobileNumber>{linkMobile}</MobileNumber><TransactionRemark>{tran_remark}</TransactionRemark></xml>'
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
-        random_32_string.encode(), payload_data_to_be_encrypted)
+        random_16_string.encode(), payload_data_to_be_encrypted)
 
     encrypted_data = encrypted_payload_aes_cbc_json['encrypted_payload_txt']
     iv = encrypted_payload_aes_cbc_json['iv']
@@ -79,8 +79,6 @@ async def send_test_request():
 
     print(r.status_code)
 
-
-
     return {"Hello": "World"}
 
 
@@ -88,21 +86,21 @@ async def send_test_request():
 def encrypt_test():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    random_32_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
-    encrypted_session_key_in_bytes = encrypt_using_public_key(
-        random_32_string.encode())
+    random_16_string = ''.join(random.choice(
+        string.ascii_uppercase + string.digits) for _ in range(16))
+    encrypted_session_key_in_bytes = encrypt_using_public_key(random_16_string)
 
     payload_data_to_be_encrypted = f'<xml><ReferenceNumber>{ref_no}</ReferenceNumber><MerchantId>{mer_id}</MerchantId><MerchantPassword>{mer_pass}</MerchantPassword><Product>{product}</Product><ProductCategory>{pro_cat}</ProductCategory><MobileNumber>{linkMobile}</MobileNumber><TransactionRemark>{tran_remark}</TransactionRemark></xml>'
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
-        random_32_string.encode(), payload_data_to_be_encrypted)
+        random_16_string.encode(), payload_data_to_be_encrypted)
 
     encrypted_data = encrypted_payload_aes_cbc_json['encrypted_payload_txt']
     iv = encrypted_payload_aes_cbc_json['iv']
 
     # Send api request to ICICI server
 
-    return {"IV": iv, "encData":encrypted_data,"encKey":b64encode(encrypted_session_key_in_bytes)}
+    return {"IV": iv, "encData": encrypted_data, "encKey": b64encode(encrypted_session_key_in_bytes)}
 
 
 @app.get("/decrypt-test")
@@ -132,20 +130,14 @@ def decrypt_using_private_key(value: str):
     return cipher.decrypt(b64decode(value), sentinel)
 
 
-def encrypt_using_public_key(bytes):
+def encrypt_using_public_key(value: str):
     rsa_public_key = RSA.importKey(open('secrets/icici.cer').read())
-
-    enc_data = rsa.encrypt(bytes,
-                         rsa_public_key)
-
-    # cipher = PKCS1_v1_5.new(rsa_key)
-    # enc_key = cipher.encrypt(bytes)
-    return enc_data
+    return rsa.encrypt(value.encode(), rsa_public_key)
 
 
 def encrypt_payload_with_aes_cbc(session_key_in_bytes, payload: str):
     cipher = AES.new(session_key_in_bytes, AES.MODE_CBC)
-    cipher_bytes = cipher.encrypt(pad(b64decode(payload), AES.block_size))
+    cipher_bytes = cipher.encrypt(pad(payload.encode(), AES.block_size))
     iv = b64encode(cipher.iv)
     cypher_text = b64encode(cipher_bytes)
 
