@@ -8,7 +8,9 @@ from Crypto.Cipher import PKCS1_v1_5, AES, PKCS1_OAEP
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
 
+import http3
 
+client = http3.AsyncClient()
 
 
 app = FastAPI()
@@ -27,6 +29,7 @@ product = 'VP01'
 pro_cat = 36
 linkMobile = '9944838952'
 tran_remark = 'FLIPKART Card Mobile Number link'
+endpoint_url = 'https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile'
 
 
 @app.get("/")
@@ -41,7 +44,7 @@ def read_root():
 async def send_test_request():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-  
+
     session_key_in_bytes = get_random_bytes(16)
     encrypted_session_key_in_bytes = encrypt_using_public_key(
         session_key_in_bytes)
@@ -56,30 +59,48 @@ async def send_test_request():
     iv = encrypted_payload_aes_cbc_json['iv']
     enc_session_key = b64encode(encrypted_session_key_in_bytes)
 
+    request_data = {
+        "requestId": "",
+        "service": "LOP",
+        "encryptedKey": "A2MzWQ6zv+RArgSpGmW5Lg1K3phW21+7ex8uKSHZKtkuF4MOxAF1MlciwmgCGohSS6LGseOAaOrCZw7DkpgQ4qAc7j0WKb6GAJQwIPrJPIR/NFeisXi4Mp1mYZbN9VfwpBWTAEcgEjrF8SICZkeb2J+sR/wvZNeEPJGRTHpn0FewcIhz5m6GPKU7J+8XWLBMJN2Hy0tkdQg8iwj3KsCdLJ+IexSxDNXorxDkt2W0SMuW0aMuGEMoj8QmMXcfks751BvIy5h3gCLE9EcKlhp9QGOnjG35ZFOIv4ioJP+5E8qhT4a9XkUju0lVpUAkuI5TeLm14Wk/2+zX1TFm1jHzK+cTDP/C11HQ6OZ+1no3fGwAxsS/IGNpQO4dpoiXcUWgOugHkeRR8X4w0aEhX/v6dvvXGr0WmD0gu2iIsZbfR1CMk9RCykD7oEstN04Lxyka+AXAM6bh3EJ5Jm5n9CvDM5Lph+KqstBjiT17MUq81F/KcsMtTC42s4JWS+5SCe/y6YustUwxGXL9VxVjzHehuC3xeEQG9SLxmLCJsteWsj9eo8XwMImktJH7S20RAhObMcaGvVuTrV3/unYdI218BklvvN61TvUssLd5WjLLbLMU8gtr5fSGJi5nV9RhqnGZ/F9RqNQ4MJgWjzUZ6XiJAqKrAKIVIwc8i6/o5ThM5Os=",
+        "oaepHashingAlgorithm": "NONE",
+        "iv": "",
+        "encryptedData": "tfNgDxH/AiIMtvOqUWqR/jDSX/JTLujlATqhY55JvsoDpbCYtqP40XDWcbDG0qUj6UV8+FA4kVtAu7Hl3cKEp4TDfYG4S/QXDGUOnygGlBJEY+MDO+IPoDC8blTDzVPGn3WCMG1SGrC54eZatgoAmhNUNm/zwy0UPCShxd6+0hHH3JKjhkhjGTCmxXnGjS7XCvTHYp3k+PKLB7MI/SKpjoVWW0athHP9cRSb9YhJB0sMlkW1Btq3wGBvNuZgcL4UKw3RIJz3Y0v8FBEAVOzFvFz4161UZOQK9dQAsf2u7gcChYg8xLqL4fuBFf7VZCRjaHFYzdl6ebS1aDd0aGSZ7b7/Rmga50Mv99nnGBH3SXRhnOWaK+SRBCa0ge1c1QNokxvUj6JXmD7D+4EsOnmW+UYRMFSw/AQqULg6ZdKU0os=",
+        "clientInfo": "",
+        "optionalParam": ""
+    }
+
+    headers = {'Content-Type': 'application/json',
+               'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
+
+    r = await client.post(endpoint_url, data=request_data, headers=headers)
+
+    print(r.status_code)
+
     # Sending POST request
-    async with aiohttp.ClientSession() as session:
-        # Generate random string for request id
+    # async with aiohttp.ClientSession() as session:
+    #     # Generate random string for request id
 
-        header = {'Content-Type': 'application/json',
-                  'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
+    #     header = {'Content-Type': 'application/json',
+    #               'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
 
-        request_data = {
-            "requestId": "",
-            "service": "LOP",
-            "encryptedKey": "A2MzWQ6zv+RArgSpGmW5Lg1K3phW21+7ex8uKSHZKtkuF4MOxAF1MlciwmgCGohSS6LGseOAaOrCZw7DkpgQ4qAc7j0WKb6GAJQwIPrJPIR/NFeisXi4Mp1mYZbN9VfwpBWTAEcgEjrF8SICZkeb2J+sR/wvZNeEPJGRTHpn0FewcIhz5m6GPKU7J+8XWLBMJN2Hy0tkdQg8iwj3KsCdLJ+IexSxDNXorxDkt2W0SMuW0aMuGEMoj8QmMXcfks751BvIy5h3gCLE9EcKlhp9QGOnjG35ZFOIv4ioJP+5E8qhT4a9XkUju0lVpUAkuI5TeLm14Wk/2+zX1TFm1jHzK+cTDP/C11HQ6OZ+1no3fGwAxsS/IGNpQO4dpoiXcUWgOugHkeRR8X4w0aEhX/v6dvvXGr0WmD0gu2iIsZbfR1CMk9RCykD7oEstN04Lxyka+AXAM6bh3EJ5Jm5n9CvDM5Lph+KqstBjiT17MUq81F/KcsMtTC42s4JWS+5SCe/y6YustUwxGXL9VxVjzHehuC3xeEQG9SLxmLCJsteWsj9eo8XwMImktJH7S20RAhObMcaGvVuTrV3/unYdI218BklvvN61TvUssLd5WjLLbLMU8gtr5fSGJi5nV9RhqnGZ/F9RqNQ4MJgWjzUZ6XiJAqKrAKIVIwc8i6/o5ThM5Os=",
-            "oaepHashingAlgorithm": "NONE",
-            "iv": "",
-            "encryptedData": "tfNgDxH/AiIMtvOqUWqR/jDSX/JTLujlATqhY55JvsoDpbCYtqP40XDWcbDG0qUj6UV8+FA4kVtAu7Hl3cKEp4TDfYG4S/QXDGUOnygGlBJEY+MDO+IPoDC8blTDzVPGn3WCMG1SGrC54eZatgoAmhNUNm/zwy0UPCShxd6+0hHH3JKjhkhjGTCmxXnGjS7XCvTHYp3k+PKLB7MI/SKpjoVWW0athHP9cRSb9YhJB0sMlkW1Btq3wGBvNuZgcL4UKw3RIJz3Y0v8FBEAVOzFvFz4161UZOQK9dQAsf2u7gcChYg8xLqL4fuBFf7VZCRjaHFYzdl6ebS1aDd0aGSZ7b7/Rmga50Mv99nnGBH3SXRhnOWaK+SRBCa0ge1c1QNokxvUj6JXmD7D+4EsOnmW+UYRMFSw/AQqULg6ZdKU0os=",
-            "clientInfo": "",
-            "optionalParam": ""
-        }
+    #     request_data = {
+    #         "requestId": "",
+    #         "service": "LOP",
+    #         "encryptedKey": "A2MzWQ6zv+RArgSpGmW5Lg1K3phW21+7ex8uKSHZKtkuF4MOxAF1MlciwmgCGohSS6LGseOAaOrCZw7DkpgQ4qAc7j0WKb6GAJQwIPrJPIR/NFeisXi4Mp1mYZbN9VfwpBWTAEcgEjrF8SICZkeb2J+sR/wvZNeEPJGRTHpn0FewcIhz5m6GPKU7J+8XWLBMJN2Hy0tkdQg8iwj3KsCdLJ+IexSxDNXorxDkt2W0SMuW0aMuGEMoj8QmMXcfks751BvIy5h3gCLE9EcKlhp9QGOnjG35ZFOIv4ioJP+5E8qhT4a9XkUju0lVpUAkuI5TeLm14Wk/2+zX1TFm1jHzK+cTDP/C11HQ6OZ+1no3fGwAxsS/IGNpQO4dpoiXcUWgOugHkeRR8X4w0aEhX/v6dvvXGr0WmD0gu2iIsZbfR1CMk9RCykD7oEstN04Lxyka+AXAM6bh3EJ5Jm5n9CvDM5Lph+KqstBjiT17MUq81F/KcsMtTC42s4JWS+5SCe/y6YustUwxGXL9VxVjzHehuC3xeEQG9SLxmLCJsteWsj9eo8XwMImktJH7S20RAhObMcaGvVuTrV3/unYdI218BklvvN61TvUssLd5WjLLbLMU8gtr5fSGJi5nV9RhqnGZ/F9RqNQ4MJgWjzUZ6XiJAqKrAKIVIwc8i6/o5ThM5Os=",
+    #         "oaepHashingAlgorithm": "NONE",
+    #         "iv": "",
+    #         "encryptedData": "tfNgDxH/AiIMtvOqUWqR/jDSX/JTLujlATqhY55JvsoDpbCYtqP40XDWcbDG0qUj6UV8+FA4kVtAu7Hl3cKEp4TDfYG4S/QXDGUOnygGlBJEY+MDO+IPoDC8blTDzVPGn3WCMG1SGrC54eZatgoAmhNUNm/zwy0UPCShxd6+0hHH3JKjhkhjGTCmxXnGjS7XCvTHYp3k+PKLB7MI/SKpjoVWW0athHP9cRSb9YhJB0sMlkW1Btq3wGBvNuZgcL4UKw3RIJz3Y0v8FBEAVOzFvFz4161UZOQK9dQAsf2u7gcChYg8xLqL4fuBFf7VZCRjaHFYzdl6ebS1aDd0aGSZ7b7/Rmga50Mv99nnGBH3SXRhnOWaK+SRBCa0ge1c1QNokxvUj6JXmD7D+4EsOnmW+UYRMFSw/AQqULg6ZdKU0os=",
+    #         "clientInfo": "",
+    #         "optionalParam": ""
+    #     }
 
-        endpoint_url = 'https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile'
+    #     endpoint_url = 'https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile'
 
-        async with session.post(endpoint_url, headers=header, data=request_data) as response:
-            #  decrypting response
-            print(session.headers)
-            print(session)
+    #     async with session.post(endpoint_url, headers=header, data=request_data) as response:
+    #         #  decrypting response
+    #         print(session.headers)
+    #         print(session)
 
     return {"Hello": "World"}
 
@@ -134,7 +155,7 @@ def decrypt_using_private_key(value: str):
 
 def encrypt_using_public_key(bytes):
     rsa_key = RSA.importKey(open('secrets/icici.cer').read())
-    
+
     cipher = PKCS1_v1_5.new(rsa_key)
     enc_key = cipher.encrypt(bytes)
     return enc_key
