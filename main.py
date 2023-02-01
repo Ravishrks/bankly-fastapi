@@ -33,6 +33,8 @@ def read_root():
     return {"Hello": "World"}
 
 # Complete implementation of encryption and decription
+
+
 @app.get("/send-test-request")
 async def send_test_request():
     # Decrypting encrypted key to get session key,
@@ -54,16 +56,15 @@ async def send_test_request():
     # Sending POST request
     async with aiohttp.ClientSession() as session:
         # Generate random string for request id
-       
 
         header = {'Content-Type': 'application/json',
-                  "apikey": api_test_key, "SrcApp": src_app}
-
+                  "apikey": api_test_key, "SrcApp": src_app, 'Accept': 'application/json'}
 
         request_data = {
+            "requestId": "",
             "service": 'LOP',
             "encryptedKey": enc_session_key,
-            "oaepHashingAlgorithm": 'NONE',
+            "oaepHashingAlgorithm": "NONE",
             "iv": "",
             "encryptedData": encrypted_data,
             "clientInfo": "",
@@ -88,7 +89,6 @@ def encrypt_test():
         session_key_in_bytes)
 
     payload_data_to_be_encrypted = f'<xml><ReferenceNumber>{ref_no}</ReferenceNumber><MerchantId>{mer_id}</MerchantId><MerchantPassword>{mer_pass}</MerchantPassword><Product>{product}</Product><ProductCategory>{pro_cat}</ProductCategory><MobileNumber>{linkMobile}</MobileNumber><TransactionRemark>{tran_remark}</TransactionRemark></xml>'
-
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
         session_key_in_bytes, payload_data_to_be_encrypted)
