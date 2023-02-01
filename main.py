@@ -42,8 +42,7 @@ async def send_test_request():
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
   
-    session_key_in_bytes = b64encode('3MA5SLJXGYDVZ02R')
-    # session_key_in_bytes = get_random_bytes(16)
+    session_key_in_bytes = get_random_bytes(16)
     encrypted_session_key_in_bytes = encrypt_using_public_key(
         session_key_in_bytes)
 
