@@ -4,7 +4,7 @@
 
 # Token
 ```
-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
+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
 ```
 
 ```bash
