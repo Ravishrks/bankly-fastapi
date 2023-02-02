@@ -68,10 +68,10 @@ async def send_test_request():
     request_data = {
         "requestId": "",
         "service": "LOP",
-        "encryptedKey": b64encode(encrypted_session_key_bytes).decode("utf-8"),
+        "encryptedKey": b64encode(encrypted_session_key_bytes).decode(),
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
-        "encryptedData": b64encode(encrypted_data_bytes).decode("utf-8"),
+        "encryptedData": b64encode(encrypted_data_bytes).decode(),
         "clientInfo": "",
         "optionalParam": ""
     }
