@@ -53,9 +53,10 @@ async def send_test_request():
 
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    random_session_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+    random_session_string = ''.join(random.SystemRandom().choice(
+        string.ascii_uppercase + string.digits) for _ in range(32))
 
-    session_bytes = random_session_string.encode("utf-8")
+    session_bytes = session_bytes = get_random_bytes(16)
     encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
@@ -66,7 +67,7 @@ async def send_test_request():
 
     request_data = {
         "requestId": "",
-        "service": "",
+        "service": "LOP",
         "encryptedKey": b64encode(encrypted_session_key_bytes).decode("utf-8"),
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
@@ -109,7 +110,8 @@ async def encrypt_test():
 
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    random_session_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+    random_session_string = ''.join(random.SystemRandom().choice(
+        string.ascii_uppercase + string.digits) for _ in range(32))
 
     session_bytes = b64decode(random_session_string)
     # session_bytes = get_random_bytes(16)
@@ -131,9 +133,6 @@ async def encrypt_test():
         "clientInfo": "",
         "optionalParam": ""
     }
-
-
-
 
     headers = {'Content-Type': 'application/json',
                'apikey': 'xUHvlTOtkLn37jnuG0Yp8zr2kivgRg6j', 'SrcApp': 'bankly', 'Accept': 'application/json'}
@@ -183,7 +182,7 @@ def encrypt_payload_with_aes_cbc(session_key_in_bytes, payload: str):
 
 
 # Decription, following ICICI guidelines
-def decrypt_payload_with_aes_cbc(session_key_in_bytes:bytes, payload: str):
+def decrypt_payload_with_aes_cbc(session_key_in_bytes: bytes, payload: str):
     payload_in_bytes = b64decode(payload)
 
     # First 16 bytes is IV, from encryptedData
