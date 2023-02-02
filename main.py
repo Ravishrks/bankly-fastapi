@@ -94,8 +94,11 @@ async def send_test_request():
     print(r.status_code)
     print(r.text)
     print(r.json())
+    print(decrypted_session_key_in_bytes.decode())
+    print(decrypted_session_key_in_bytes.decode('utf-8'))
+    print(decrypted_payload)
 
-    return {"decrypted_session_key": decrypted_session_key_in_bytes.decode(), "decrypted_payload": decrypted_payload.decode(), }
+    return {"decrypted_session_key": decrypted_session_key_in_bytes.decode(), "decrypted_payload": decrypted_payload[15:].decode(), }
 
 
 @app.get("/encrypt-test")
@@ -180,7 +183,7 @@ def encrypt_payload_with_aes_cbc(session_key_in_bytes, payload: str):
 
 
 # Decription, following ICICI guidelines
-def decrypt_payload_with_aes_cbc(session_key_in_bytes, payload: str):
+def decrypt_payload_with_aes_cbc(session_key_in_bytes:bytes, payload: str):
     payload_in_bytes = b64decode(payload)
 
     # First 16 bytes is IV, from encryptedData
