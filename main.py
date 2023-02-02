@@ -55,7 +55,7 @@ async def send_test_request():
     # to be used in AES decryption
     random_session_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
-    session_bytes = b64decode(random_session_string)
+    session_bytes = random_session_string.encode("utf-8")
     encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
@@ -67,10 +67,10 @@ async def send_test_request():
     request_data = {
         "requestId": "",
         "service": "",
-        "encryptedKey": b64encode(encrypted_session_key_bytes).decode(),
+        "encryptedKey": b64encode(encrypted_session_key_bytes).decode("utf-8"),
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
-        "encryptedData": b64encode(encrypted_data_bytes).decode(),
+        "encryptedData": b64encode(encrypted_data_bytes).decode("utf-8"),
         "clientInfo": "",
         "optionalParam": ""
     }
@@ -121,10 +121,10 @@ async def encrypt_test():
     request_data = {
         "requestId": "",
         "service": "",
-        "encryptedKey": b64encode(encrypted_session_key_bytes).decode(),
+        "encryptedKey": b64encode(encrypted_session_key_bytes).decode('utf-8'),
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
-        "encryptedData": b64encode(encrypted_data_bytes).decode(),
+        "encryptedData": b64encode(encrypted_data_bytes).decode('utf-8'),
         "clientInfo": "",
         "optionalParam": ""
     }
