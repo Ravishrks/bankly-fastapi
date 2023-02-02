@@ -78,11 +78,25 @@ async def send_test_request():
 
     r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
 
+    # Get the payload and display response
+    response_json_disct = json.loads(r.json())
+    response_enc_key = response_json_disct['encryptedKey']
+    response_enc_data = response_json_disct['encryptedKey']
+
+    decrypted_session_key_in_bytes = decrypt_using_private_key(
+        response_enc_key)
+
+    decrypted_payload = decrypt_payload_with_aes_cbc(
+        decrypted_session_key_in_bytes, response_enc_data)
+
+
+
+
     print(r.status_code)
     print(r.text)
     print(r.json())
 
-    return r.json()
+    return {"decrypted_session_key": decrypted_session_key_in_bytes.decode('utf-8'), "decrypted_payload": decrypted_payload[15:].decode('utf-8'), }
 
 
 @app.get("/encrypt-test")
