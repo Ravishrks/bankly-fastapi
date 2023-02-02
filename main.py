@@ -81,7 +81,7 @@ async def send_test_request():
 
     print(r.status_code)
     print(r.text)
-    print(r.json)
+    print(r.json())
 
     return {"Hello": "World"}
 
