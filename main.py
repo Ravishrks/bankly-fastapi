@@ -95,7 +95,7 @@ async def send_test_request():
     print(r.text)
     print(r.json())
 
-    return {"decrypted_session_key": decrypted_session_key_in_bytes.decode('utf-8'), "decrypted_payload": decrypted_payload[15:].decode('utf-8'), }
+    return {"decrypted_session_key": decrypted_session_key_in_bytes.decode('utf-8'), "decrypted_payload": decrypted_payload[15:].decode(), }
 
 
 @app.get("/encrypt-test")
