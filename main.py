@@ -74,10 +74,10 @@ async def send_test_request():
     }
 
     headers = {'Content-Type': 'application/json',
-               'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
+               'apikey': 'xUHvlTOtkLn37jnuG0Yp8zr2kivgRg6j', 'SrcApp': 'bankly', 'Accept': 'application/json'}
 
     # r = await client.post(endpoint_url, data=request_data, headers=headers)
-    r = requests.post(endpoint_url, data=request_data,headers=headers)
+    r = requests.post(endpoint_url, data=request_data, headers=headers)
 
     print(r.status_code)
     print(r.text)
