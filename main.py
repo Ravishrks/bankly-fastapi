@@ -12,11 +12,11 @@ from Crypto.Util.Padding import pad
 
 import http3
 import rsa
-import requests
+# import requests
 import json
 
 
-# client = http3.AsyncClient()
+client = http3.AsyncClient()
 
 
 app = FastAPI()
@@ -78,7 +78,7 @@ async def send_test_request():
                'apikey': 'xUHvlTOtkLn37jnuG0Yp8zr2kivgRg6j', 'SrcApp': 'bankly', 'Accept': 'application/json'}
 
     # r = await client.post(endpoint_url, data=request_data, headers=headers)
-    r = requests.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
+    r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
 
     print(r.status_code)
     print(r.text)
