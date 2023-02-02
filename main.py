@@ -79,9 +79,9 @@ async def send_test_request():
     r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
 
     # Get the payload and display response
-    response_json_disct = json.loads(r.json())
+    response_json_disct = r.json()
     response_enc_key = response_json_disct['encryptedKey']
-    response_enc_data = response_json_disct['encryptedKey']
+    response_enc_data = response_json_disct['encryptedData']
 
     decrypted_session_key_in_bytes = decrypt_using_private_key(
         response_enc_key)
