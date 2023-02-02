@@ -1,3 +1,5 @@
+import random
+import string
 from typing import Union
 # import aiohttp
 
@@ -51,7 +53,9 @@ async def send_test_request():
 
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    session_bytes = get_random_bytes(16)
+    random_session_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+
+    session_bytes = b64decode(random_session_string)
     encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
@@ -102,7 +106,10 @@ async def encrypt_test():
 
     # Decrypting encrypted key to get session key,
     # to be used in AES decryption
-    session_bytes = get_random_bytes(16)
+    random_session_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+
+    session_bytes = b64decode(random_session_string)
+    # session_bytes = get_random_bytes(16)
     encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
 
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
