@@ -64,7 +64,7 @@ async def send_test_request():
 
     request_data = {
         "requestId": "",
-        "service": "",
+        "service": "LOP",
         "encryptedKey": "jXwyhjY7tMmQuxFQCBq6lHTUbW4OjD01G88mAZEtfqXi2L8NDnFWIO44bcx2b7OEO14YPlBtn8MqpgsZNNCoZ+/jru8BuPOfF0aSFx060qNA8dDXaQ6sVtyV2xiT3/WrKy3m5kQAVmygy7PqIeV/rSOA4rH0SNNZuz996DEj3yub9YW327Af1Rh5nysADKJSiBdZpbCFAYaALEnU+sG/Y67bp60lEd27ek84f1cdb+EzwWcv78ISBSefmZ5QfSsLUAYzNE6BEX2Bps7pIXjdrD3L+4+Rl8WNCCUPZFtPYKK5KnvO/wICfN7Qo3/h1IHr6Ni77KUilFogV2YZMeL0xAppvgXlK7A0Cz8rnLv1JE/Ha7nvHxCf8kGQKuSBUnGiufLj0yLFR+3us58NzeX6s7iMByHfRMRcRDzmWcGel85cfwhUSzaBfJVsguohmNKqNgpphaR5s4FoHtRTzHEP83dAFR6edmtQ70d3Au6areI5XPi7aJJ7gttDnuciRXmzmpB4heWmlqd1wxAg+bsGyHRMGt2bGNBFQUYyGOJPkWCM8Zl+LTASFqpoyrlly5JnPIN5IMjzf9WNXm8L3wjQMt5KRRmFl5NGJUsDMGOWQRfiszDxBUtpmimfuo/CVddOu0htChvh5CU1L/8EFkWDZZrt2VWR/taA9ja4X0/wOUw=",
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
