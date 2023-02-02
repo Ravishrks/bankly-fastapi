@@ -1,7 +1,7 @@
 import random
 import string
 from typing import Union
-import aiohttp
+# import aiohttp
 
 from fastapi import FastAPI
 from base64 import b64decode, b64encode
@@ -12,9 +12,10 @@ from Crypto.Util.Padding import pad
 
 import http3
 import rsa
+import requests
 
 
-client = http3.AsyncClient()
+# client = http3.AsyncClient()
 
 
 app = FastAPI()
@@ -75,10 +76,11 @@ async def send_test_request():
     headers = {'Content-Type': 'application/json',
                'apikey': api_test_key, 'SrcApp': src_app, 'Accept': 'application/json'}
 
-    r = await client.post(endpoint_url, data=request_data, headers=headers)
+    # r = await client.post(endpoint_url, data=request_data, headers=headers)
+    r = requests.post(endpoint_url, data=request_data,headers=headers)
 
     print(r.status_code)
-    print(r.json)
+    print(r.text)
 
     return {"Hello": "World"}
 
