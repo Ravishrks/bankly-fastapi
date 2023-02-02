@@ -48,28 +48,27 @@ def read_root():
 
 @app.get("/send-test-request")
 async def send_test_request():
-    # Decrypting encrypted key to get session key,
-    # to be used in AES decryption
-
-    random_16_string = ''.join(random.choice(
-        string.ascii_uppercase + string.digits) for _ in range(16))
-    encrypted_session_key_in_bytes = encrypt_using_public_key(random_16_string)
-
+    # Payload
     payload_data_to_be_encrypted = f'<xml><ReferenceNumber>{ref_no}</ReferenceNumber><MerchantId>{mer_id}</MerchantId><MerchantPassword>{mer_pass}</MerchantPassword><Product>{product}</Product><ProductCategory>{pro_cat}</ProductCategory><MobileNumber>{linkMobile}</MobileNumber><TransactionRemark>{tran_remark}</TransactionRemark></xml>'
 
-    encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
-        random_16_string.encode(), payload_data_to_be_encrypted)
+    # Decrypting encrypted key to get session key,
+    # to be used in AES decryption
+    session_bytes = get_random_bytes(16)
+    encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
 
-    encrypted_data = encrypted_payload_aes_cbc_json['encrypted_payload_txt']
-    iv = encrypted_payload_aes_cbc_json['iv']
+    encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
+        session_bytes, payload_data_to_be_encrypted)
+
+    encrypted_data_bytes = encrypted_payload_aes_cbc_json['encrypted_bytes']
+    iv_bytes = encrypted_payload_aes_cbc_json['iv']
 
     request_data = {
         "requestId": "",
         "service": "",
-        "encryptedKey": b64encode(encrypted_session_key_in_bytes),
+        "encryptedKey": b64encode(encrypted_session_key_bytes).decode(),
         "oaepHashingAlgorithm": "NONE",
         "iv": "",
-        "encryptedData":encrypted_data,
+        "encryptedData": b64encode(encrypted_data_bytes).decode(),
         "clientInfo": "",
         "optionalParam": ""
     }
@@ -77,8 +76,7 @@ async def send_test_request():
     headers = {'Content-Type': 'application/json',
                'apikey': 'xUHvlTOtkLn37jnuG0Yp8zr2kivgRg6j', 'SrcApp': 'bankly', 'Accept': 'application/json'}
 
-    # r = await client.post(endpoint_url, data=request_data, headers=headers)
-    r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dump(request_data), headers=headers)
+    r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
 
     print(r.status_code)
     print(r.text)
@@ -88,24 +86,43 @@ async def send_test_request():
 
 
 @app.get("/encrypt-test")
-def encrypt_test():
-    # Decrypting encrypted key to get session key,
-    # to be used in AES decryption
-    random_16_string = ''.join(random.choice(
-        string.ascii_uppercase + string.digits) for _ in range(16))
-    encrypted_session_key_in_bytes = encrypt_using_public_key(random_16_string)
+async def encrypt_test():
 
+    # Payload
     payload_data_to_be_encrypted = f'<xml><ReferenceNumber>{ref_no}</ReferenceNumber><MerchantId>{mer_id}</MerchantId><MerchantPassword>{mer_pass}</MerchantPassword><Product>{product}</Product><ProductCategory>{pro_cat}</ProductCategory><MobileNumber>{linkMobile}</MobileNumber><TransactionRemark>{tran_remark}</TransactionRemark></xml>'
 
+    # Decrypting encrypted key to get session key,
+    # to be used in AES decryption
+    session_bytes = get_random_bytes(16)
+    encrypted_session_key_bytes = encrypt_using_public_key(session_bytes)
+
     encrypted_payload_aes_cbc_json = encrypt_payload_with_aes_cbc(
-        random_16_string.encode(), payload_data_to_be_encrypted)
+        session_bytes, payload_data_to_be_encrypted)
 
-    encrypted_data = encrypted_payload_aes_cbc_json['encrypted_payload_txt']
-    iv = encrypted_payload_aes_cbc_json['iv']
+    encrypted_data_bytes = encrypted_payload_aes_cbc_json['encrypted_bytes']
+    iv_bytes = encrypted_payload_aes_cbc_json['iv']
 
-    # Send api request to ICICI server
+    request_data = {
+        "requestId": "",
+        "service": "",
+        "encryptedKey": b64encode(encrypted_session_key_bytes).decode(),
+        "oaepHashingAlgorithm": "NONE",
+        "iv": "",
+        "encryptedData": b64encode(encrypted_data_bytes).decode(),
+        "clientInfo": "",
+        "optionalParam": ""
+    }
 
-    return {"IV": iv, "encData": encrypted_data, "encKey": b64encode(encrypted_session_key_in_bytes)}
+
+
+
+    headers = {'Content-Type': 'application/json',
+               'apikey': 'xUHvlTOtkLn37jnuG0Yp8zr2kivgRg6j', 'SrcApp': 'bankly', 'Accept': 'application/json'}
+
+    # r = await client.post(endpoint_url, data=request_data, headers=headers)
+    # r = await client.post('https://apibankingonesandbox.icicibank.com/api/v1/pcms-chw?service=LinkedMobile', data=json.dumps(request_data), headers=headers)
+
+    return {"IV": 'iv', "encData": 'encrypted_data', "encKey": 'b64encode(encrypted_session_key_in_bytes)'}
 
 
 @app.get("/decrypt-test")
@@ -135,18 +152,18 @@ def decrypt_using_private_key(value: str):
     return cipher.decrypt(b64decode(value), sentinel)
 
 
-def encrypt_using_public_key(value: str):
+def encrypt_using_public_key(value: bytes):
     rsa_public_key = RSA.importKey(open('secrets/icici.cer').read())
-    return rsa.encrypt(value.encode(), rsa_public_key)
+    return rsa.encrypt(value, rsa_public_key)
 
 
 def encrypt_payload_with_aes_cbc(session_key_in_bytes, payload: str):
     cipher = AES.new(session_key_in_bytes, AES.MODE_CBC)
-    cipher_bytes = cipher.encrypt(pad(payload.encode(), AES.block_size))
-    iv = b64encode(cipher.iv)
-    cypher_text = b64encode(cipher_bytes)
+    cipher_bytes = cipher.encrypt(pad(payload.encode('utf-8'), AES.block_size))
+    iv = cipher.iv
+    cypher_bytes = cipher_bytes
 
-    return {"encrypted_payload_txt": cypher_text, "iv": iv}
+    return {"encrypted_bytes": cypher_bytes, "iv": iv}
 
 
 # Decription, following ICICI guidelines
